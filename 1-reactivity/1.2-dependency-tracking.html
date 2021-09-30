@@ -1,11 +1,57 @@
 <script>
 // a class representing a dependency
 // exposing it on window is necessary for testing
+
+// let activeUpdate
+// 上面这行可以注释掉
+// JavaScript 是单线程的，这个变量（函数也是变量）是唯一的
+// 因此我们注释掉
+
 window.Dep = class Dep {
-  // Implement this!
+  constructor () {
+    // 订阅任务队列
+    this.subscribers = new Set()
+  }
+
+  depend () {
+    if (activeUpdate) {
+    // register the current active update
+    // as a subscriber
+      this.subscribers.add(activeUpdate)
+    }
+  }
+
+  notify () {
+    // run all subscriber functions
+    this.subscribers.forEach(sub => sub())
+  }
 }
 
+// 明明可以直接 activeUpdate = update 然后执行 update()
+//   (因为 dep.depend() 在 update 中)
+// 为什么要这么写呢？
+//   js 是单线程的，通过全局变量监听目前在执行什么函数
+//   如果写成 activeUpdate = update 这样的描述并不准确
+//   因为 activeUpdate 被赋值为 update 时， update 还没有开始执行
 function autorun (update) {
-  // Implement this!
+  const wrappedUpdate = () => {
+    activeUpdate = wrappedUpdate  // 标记 wrappedUpdate 正在被执行
+    // 上面这行改成 activeUpdate = update 也可以通过测试
+    update()
+    activeUpdate = null  // 执行完成，标记取消
+  }
+  wrappedUpdate()
 }
 </script>
+
+<!-- 
+npm test -- -t 1.2
+
+ PASS  1-reactivity\__test__\1.2.test.js (6.622s)
+
+Test Suites: 6 skipped, 1 passed, 1 of 7 total
+Tests:       6 skipped, 1 passed, 7 total
+Snapshots:   0 total
+Time:        7.386s
+Ran all test suites with tests matching "1.2".
+ -->
