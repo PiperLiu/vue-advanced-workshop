@@ -1,5 +1,29 @@
 <script>
 function convert (obj) {
   // Implement this!
+  Object.keys(obj).forEach(key => {
+    let internalValue = obj[key]
+    // 注意 Object.defineProperties Object.defineProperty 有区别
+    Object.defineProperty(obj, key, {
+      get () {
+        console.log(`getting key "${key}": ${internalValue}`)
+        return internalValue
+      },
+      set (newValue) {
+        console.log(`setting key "${key}" to: ${newValue}`)
+        internalValue = newValue
+      }
+    })
+  })
 }
 </script>
+
+<!-- 
+npm test -- -t 1.1
+
+Test Suites: 6 skipped, 1 passed, 1 of 7 total
+Tests:       6 skipped, 1 passed, 7 total
+Snapshots:   0 total
+Time:        3.402s, estimated 8s
+Ran all test suites with tests matching "1.1".
+ -->
