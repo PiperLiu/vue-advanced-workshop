@@ -7,6 +7,31 @@ This is the companion repository to the Vue Advanced Workshop.
 - [Git](https://git-scm.com/)
 - [Node.js](https://nodejs.org/en/) version 6+
 
+## 我的配置
+
+我的前端学习笔记：
+- [GitHub: PiperLiu/front-end-notes](https://github.com/PiperLiu/front-end-notes)
+
+对于本 workshop 的笔记：
+- [GitHub: PiperLiu/front-end-notes/vue2017/README.md](https://github.com/PiperLiu/front-end-notes/blob/master/notes/vue2017/README.md)
+
+```bash
+# fork
+git clone https://github.com/d-levin/vue-advanced-workshop.git
+
+cd vue-advanced-workshop
+
+# 建立我的解决方案分支
+git checkout -b piper
+
+# 回滚到没有答案的版本
+git reset --hard 49b3bb3a9
+
+npm install
+```
+
+我看答案的话，去看 `49b3bb3a96fe5317` 这次 commit 删去了什么就行。
+
 ## Setup
 
 1. Clone this repo:
