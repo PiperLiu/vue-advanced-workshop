@@ -2,8 +2,35 @@
 
 <script>
 const RulesPlugin = {
-  // Implement this!
+  install (Vue) {
+    Vue.mixin({
+      created () {
+        const rules = this.$options.rules
+        if (rules) {
+          Object.keys(rules).forEach(key => {
+            const { validate, message } = rules[key]
+            this.$watch(key, newValue => {
+              const valid = validate(newValue)
+              if (!valid) {
+                console.log(message)
+              }
+            })
+          })
+        }
+      }
+    })
+  }
 }
 
 Vue.use(RulesPlugin)
 </script>
+
+<!-- 
+npm test -- -t 2.1
+
+Test Suites: 6 skipped, 1 passed, 1 of 7 total
+Tests:       6 skipped, 1 passed, 7 total
+Snapshots:   0 total
+Time:        21.788s
+Ran all test suites with tests matching "2.1"
+ -->
