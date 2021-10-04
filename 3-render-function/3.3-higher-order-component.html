@@ -19,7 +19,26 @@ const Avatar = {
 }
 
 function withAvatarURL (InnerComponent) {
-  // Implement this!
+  return {
+    props: ['username'],
+    inheritAttrs: false,  // 2.4 only
+    data () {
+      return { url: null }
+    },
+    created () {
+      fetchURL(this.username, url => {
+        this.url = url
+      })
+    },
+    render (h) {
+      return h(InnerComponent, {
+        attrs: this.$attrs,  // 2.4 only
+        props: {
+          src: this.url || 'http://via.placeholder.com/200x200'
+        }
+      })
+    }
+  }
 }
 
 const SmartAvatar = withAvatarURL(Avatar)
@@ -29,3 +48,13 @@ new Vue({
   components: { SmartAvatar }
 })
 </script>
+
+<!-- 
+npm test -- -t 3.3
+
+Test Suites: 6 skipped, 1 passed, 1 of 7 total
+Tests:       6 skipped, 1 passed, 7 total
+Snapshots:   0 total
+Time:        5.778s
+Ran all test suites with tests matching "3.3".
+ -->
