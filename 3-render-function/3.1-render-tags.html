@@ -6,8 +6,23 @@
 
 <script>
 Vue.component('example', {
-  // Implement this!
+  props: ['tags'],
+  render (h) {
+    // Note that the second argument (data object) can be omitted, and the
+    // children argument can accept strings or numbers instead of Array of vnodes
+    return h('div', this.tags.map((tag, i) => h(tag, i)))
+  }
 })
 
 new Vue({ el: '#app' })
 </script>
+
+<!-- 
+npm test -- -t 3.1
+
+Test Suites: 6 skipped, 1 passed, 1 of 7 total
+Tests:       6 skipped, 1 passed, 7 total
+Snapshots:   0 total
+Time:        22.903s
+Ran all test suites with tests matching "3.1".
+ -->
