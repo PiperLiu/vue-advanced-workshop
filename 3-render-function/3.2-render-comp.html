@@ -2,22 +2,41 @@
 
 <div id="app">
   <example :ok="ok"></example>
+  <button @click="ok = !ok">toggle</button>
 </div>
 
 <script>
 const Foo = {
-  // Implement this!
+  render (h) {
+    return h('div', 'foo')
+  }
 }
 
 const Bar = {
-  // Implement this!
+  render (h) {
+    return h('div', 'bar')
+  }
 }
 
 Vue.component('example', {
-  // Implement this!
+  props: ['ok'],
+  render (h) {
+    return h(this.ok ? Foo : Bar)
+  }
 })
 
 new Vue({
-  el: '#app'
+  el: '#app',
+  data: { ok: true }
 })
 </script>
+
+<!-- 
+npm test -- -t 3.2
+
+Test Suites: 6 skipped, 1 passed, 1 of 7 total
+Tests:       6 skipped, 1 passed, 7 total
+Snapshots:   0 total
+Time:        5.164s
+Ran all test suites with tests matching "3.2".
+ -->
