@@ -1,5 +1,6 @@
 <script src="../node_modules/vue/dist/vue.js"></script>
 <script src="https://wzrd.in/standalone/path-to-regexp"></script>
+<!-- <script src="../node_modules/path-to-regexp/dist/index.js"></script> -->
 
 <div id="app"></div>
 
@@ -23,11 +24,22 @@ const Bar = { template: `<div>bar</div>` }
 const NotFound = { template: `<div>not found!</div>` }
 
 const routeTable = {
-  // Implement this!
+  '/foo/:id': Foo,
+  '/bar': Bar
 }
 
+const compiledRouteTable = {}
+Object.keys(routeTable).forEach(pattern => {
+  const dynamicSegments = []
+  compiledRouteTable[pattern] = {
+    component: routeTable[pattern],
+    regex: pathToRegexp(pattern, dynamicSegments),
+    dynamicSegments
+  }
+})
+
 window.addEventListener('hashchange', () => {
-  // Implement this!
+  app.url = window.location.hash.slice(1)
 })
 
 const app = new Vue({
@@ -43,6 +55,22 @@ const app = new Vue({
 
     // Implement the logic to figure out proper values
     // for componentToRender and props
+    // iterate through our compiled route table
+    // and check if a route matches the current path
+    // if it matches, extract dynamic segments (params) and use it as props
+    // for the matched component
+    Object.keys(compiledRouteTable).some(pattern => {
+      const { component, regex, dynamicSegments } = compiledRouteTable[pattern]
+      const match = regex.exec(path)
+      if (match) {
+        // we have a match!
+        componentToRender = component
+        dynamicSegments.forEach(( { name }, index ) => {
+          props[name] = match[index] + 1
+        })
+        return true
+      }
+    })
 
     return h('div', [
       h(componentToRender, { props }),
