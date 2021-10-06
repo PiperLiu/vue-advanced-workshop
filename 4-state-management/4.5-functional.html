@@ -2,9 +2,29 @@
 
 <div id="app"></div>
 
+<!-- 
+思路：
+1. 实现一个 Vue 对象
+2. 让 model 变为可响应的
+3. 让 action 生效，所以重写 render 函数
+（因为这里 action 是函数是的，不改变 model 的值，只返回 model）
+ -->
+
 <script>
 function app ({ el, model, view, actions }) {
-  // Implement this!
+  Object.keys(actions).forEach(key => {
+    const rawAction = actions[key]  // 直接把 rawAction 传给 Vue 的 render 不妥
+    // 因为如果直接调用 render: h => view(h, model, rawAction) 的话
+    // rawAction 返回的是一个新的对象，而非改边 model
+    actions[key] = (...payload) => {
+      // replace model with new model returned by rawAction
+      Object.assign(model, rawAction(model, actions, ...payload))
+    }
+  })
+  new Vue({
+    data: model,  // 让 model reactive
+    render: h => view(h, model, actions)
+  }).$mount(el)
 }
 
 // voila
