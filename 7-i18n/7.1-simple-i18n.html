@@ -9,7 +9,13 @@
 
 <script>
 const i18nPlugin = {
-  // Implement this!
+  install (Vue, locales) {
+    // install a $t method that looks up the message
+    Vue.prototype.$t = function (key) {
+      const lang = this.$root.lang
+      return locales[lang][key]
+    }
+  }
 }
 
 Vue.use(i18nPlugin, /* option */ {
